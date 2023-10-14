@@ -8,8 +8,11 @@ export default function ProtectedRoute({
 	children: ReactElement;
 }) {
 	const { state } = useContext(UserContext);
-	if (state.user.token) {
+	console.log(state.user);
+
+	if (state.user.jwtToken !== "") {
+		console.log("here");
 		return children;
 	}
-	return <Navigate to="/login" />;
+	return <Navigate to="/auth" />;
 }
