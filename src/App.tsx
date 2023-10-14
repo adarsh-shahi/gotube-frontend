@@ -1,11 +1,11 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SideNavigation from "./components/SideNavigation";
 import Teams from "./pages/Teams";
 import Invitations from "./pages/Invitations";
 import Setting from "./pages/Settings";
-import Login from "./pages/Login";
+import Auth from "./pages/Auth";
 
 function App() {
 	return (
@@ -24,7 +24,8 @@ function App() {
 						<Route path="/invitations" element={<Invitations />} />
 						<Route path="/settings" element={<Setting />} />
 					</Route>
-					<Route path="/login" element={<Login />} />
+					<Route path="/auth" element={<Auth />} />
+					<Route path="*" element={<div>Page not found</div>} />
 				</Routes>
 			</div>
 		</BrowserRouter>
