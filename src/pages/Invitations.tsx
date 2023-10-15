@@ -5,6 +5,7 @@ import { UserContext } from "../context/UserContext";
 interface IInviteType {
 	email: string;
 	role: string;
+	channelName?: string;
 }
 
 export default function Invitation() {
@@ -121,6 +122,9 @@ export default function Invitation() {
 		return (
 			<div key={list.email + list.role} className="flex justify-between">
 				<div className="w-min font-medium text-lg">{list.email}</div>
+				{state.user.uType === "user" && (
+					<div className="w-max font-medium text-lg">{list.channelName}</div>
+				)}
 				{state.user.uType === "owner" ? (
 					<select
 						className="w-min"
