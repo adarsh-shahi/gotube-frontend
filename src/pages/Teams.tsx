@@ -1,8 +1,17 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 
 export default function Team() {
-	const { state, dispatch } = useContext(UserContext);
+	const [content, setContent] = useState({});
+	const { state } = useContext(UserContext);
+
+	useEffect(() => {
+		const teamsId =
+			window.location.href.split("/")[
+				window.location.href.split("/").length - 1
+			];
+	});
+
 	return (
 		<div className="m-5 border-2 border-gray-600 rounded-2xl grow grid grid-cols-2 p-4 gap-5 relative">
 			<input

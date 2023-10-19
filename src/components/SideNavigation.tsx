@@ -13,11 +13,46 @@ import { UserContext } from "../context/UserContext";
 export default function SideNavigation() {
 	const [isNavigationClosed, setIsNavigationClosed] = useState(false);
 	const [isTeamsTabOpen, setIsTeamsTabOpen] = useState(false);
+	const [teamsList, setTeamsList] = useState<
+		{ profileImage: string; channelName: string; ownerId: string }[]
+	>([]);
 	const { state } = useContext(UserContext);
 
 	const handleNavigationClose = () => {
 		setIsNavigationClosed((value) => !value);
 	};
+
+	const handleTeamDetails = async () => {
+		const response = await fetch("http://localhost:8001/teams", {
+			headers: {
+				Authorization: `Bearer ${state.user.jwtToken}`,
+			},
+		});
+		const data = await response.json();
+		if (data.error) {
+			return;
+		}
+		setTeamsList(data.data);
+	};
+
+	const renderTeamList = teamsList.map((team) => {
+		return (
+			<NavLink
+				to={"/teams/" + team.ownerId}
+				className="flex gap-3"
+				key={team.ownerId}
+			>
+				<img
+					src={team.profileImage}
+					alt=""
+					width="40px"
+					height="40px"
+					className="rounded-full object-cover"
+				/>
+				<div className="text-xl font-bold">{team.channelName}</div>
+			</NavLink>
+		);
+	});
 
 	return (
 		<>
@@ -27,25 +62,33 @@ export default function SideNavigation() {
 				<IoMenu className="cursor-pointer" onClick={handleNavigationClose} />
 				{!isNavigationClosed && (
 					<div className=" flex flex-col gap-5 px-6">
-						<NavLink to="/" className={`flex gap-3 items-center`}>
-							<IoPeopleSharp />
-							<h1>Teams</h1>
-							{state.user.uType === "user" && isTeamsTabOpen ? (
-								<IoChevronDown
-									onClick={() => setIsTeamsTabOpen(false)}
-									className="w-6 h-6"
-								/>
-							) : (
-								<IoChevronForwardSharp
-									onClick={() => setIsTeamsTabOpen(true)}
-								/>
-							)}
-						</NavLink>
-						{isTeamsTabOpen && (
-							<div className="flex">
-								<div>Channel Name</div>
-								<div>Profile</div>
+						{state.user.uType === "user" && (
+							<div className="flex flex-col gap-3">
+								<div
+									className="flex gap-3 items-center cursor-pointer"
+									onClick={() => {
+										if (!isTeamsTabOpen) {
+											handleTeamDetails();
+										}
+										setIsTeamsTabOpen(!isTeamsTabOpen);
+									}}
+								>
+									<IoPeopleSharp />
+									<h1>Teams</h1>
+									{isTeamsTabOpen ? (
+										<IoChevronDown className="w-6 h-6" />
+									) : (
+										<IoChevronForwardSharp />
+									)}
+								</div>
+								{isTeamsTabOpen && renderTeamList}
 							</div>
+						)}
+						{state.user.uType === "owner" && (
+							<NavLink to="/teams/-1" className={`flex gap-3 items-center`}>
+								<IoPeopleSharp />
+								<h1>Teams</h1>
+							</NavLink>
 						)}
 						<NavLink to="/invitations" className={`flex gap-3 items-center`}>
 							<IoMailUnreadSharp />
