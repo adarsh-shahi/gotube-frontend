@@ -6,6 +6,7 @@ import Teams from "./pages/Teams";
 import Invitations from "./pages/Invitations";
 import Setting from "./pages/Settings";
 import Auth from "./pages/Auth";
+import Projects from "./pages/Projects";
 
 function App() {
 	return (
@@ -20,7 +21,8 @@ function App() {
 							</ProtectedRoute>
 						}
 					>
-						<Route index element={<Teams />} />
+						<Route index element={<div>Home Page</div>} />
+						<Route path="/teams/:id" element={<Projects />} />
 						<Route path="/invitations" element={<Invitations />} />
 						<Route path="/settings" element={<Setting />} />
 					</Route>
