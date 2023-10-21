@@ -9,6 +9,7 @@ import {
 } from "react-icons/io5";
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { ACTION_TYPE, TeamContext } from "../context/TeamContext";
 
 export default function SideNavigation() {
 	const [isNavigationClosed, setIsNavigationClosed] = useState(false);
@@ -17,6 +18,7 @@ export default function SideNavigation() {
 		{ profileImage: string; channelName: string; ownerId: string }[]
 	>([]);
 	const { state } = useContext(UserContext);
+	const { dispatch: teamDispatch } = useContext(TeamContext);
 
 	const handleNavigationClose = () => {
 		setIsNavigationClosed((value) => !value);
@@ -38,7 +40,13 @@ export default function SideNavigation() {
 	const renderTeamList = teamsList.map((team) => {
 		return (
 			<NavLink
-				to={"/teams/" + team.ownerId}
+				onClick={() => {
+					teamDispatch({
+						type: ACTION_TYPE.CHANGE_TEAM,
+						payload: { team: { ownerId: Number(team.ownerId) } },
+					});
+				}}
+				to={"/team/" + team.ownerId}
 				className="flex gap-3"
 				key={team.ownerId}
 			>
@@ -85,7 +93,7 @@ export default function SideNavigation() {
 							</div>
 						)}
 						{state.user.uType === "owner" && (
-							<NavLink to="/teams/-1" className={`flex gap-3 items-center`}>
+							<NavLink to="/team/-1" className={`flex gap-3 items-center`}>
 								<IoPeopleSharp />
 								<h1>Teams</h1>
 							</NavLink>
